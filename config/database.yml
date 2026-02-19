@@ -1,0 +1,45 @@
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+
+development:
+  <<: *default
+  database: room_booking_development
+  username: rails_user
+  password: rails
+  host: localhost
+  port: 5432
+
+
+test:
+  <<: *default
+  database: room_booking_test
+  username: rails_user
+  password: rails
+  host: localhost
+  port: 5432
+
+
+# production:
+#   primary: &primary_production
+#     <<: *default
+#     database: room_booking_production
+#     username: room_booking
+#     password: <%= ENV["ROOM_BOOKING_DATABASE_PASSWORD"] %>
+#   cache:
+#     <<: *primary_production
+#     database: room_booking_production_cache
+#     migrations_paths: db/cache_migrate
+#   queue:
+#     <<: *primary_production
+#     database: room_booking_production_queue
+#     migrations_paths: db/queue_migrate
+#   cable:
+#     <<: *primary_production
+#     database: room_booking_production_cable
+#     migrations_paths: db/cable_migrate
