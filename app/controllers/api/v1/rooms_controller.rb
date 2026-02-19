@@ -1,8 +1,10 @@
 class Api::V1::RoomsController < ApplicationController
   def index
     @rooms = Room.all
-    # no need of created_at & updated_at
-    render json: @rooms.as_json(only: [:id, :name, :booked])
+    # Map through rooms and add the 'is_available' key dynamically
+    render json: @rooms.map { |room| 
+      room.as_json.merge(is_available: !room.currently_booked?) 
+    }
   end
 
   def show
