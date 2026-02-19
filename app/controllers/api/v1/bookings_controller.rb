@@ -21,6 +21,21 @@ class Api::V1::BookingsController < ApplicationController
     end
   end
 
+  def destroy
+    @booking = Booking.find(params[:id])
+    
+    if @booking.destroy
+      render json: { 
+        message: "Booking successfully canceled",
+        booking_id: params[:id] 
+      }, status: :ok
+    else
+      render json: { error: "Failed to delete booking" }, status: :unprocessable_entity
+    end
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Booking not found" }, status: :not_found
+  end
+
   private
 
   def booking_params
