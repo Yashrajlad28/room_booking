@@ -28,5 +28,7 @@ module RoomBooking
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    config.time_zone = 'Mumbai' # Time.current will return time as per this timezone
   end
 end

@@ -7,6 +7,8 @@ class Api::V1::RoomsController < ApplicationController
     }
   end
 
+  # change this method so that it shows all bookings for 
+  # that room, implement next nearest avaliable slot feature
   def show
     @room = Room.find(params[:id])
     render json: @room

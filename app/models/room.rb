@@ -7,10 +7,27 @@ class Room < ApplicationRecord
     validates :name, presence: true, format: { with: /\A[A-Za-z ]+\z/ }
 
     def currently_booked?
-        current_time = Time.now
+        # rails considers UTC by default for time
+        # or you can config timezone in application.rb file
+
+
+        # THIS DOES NOT WORK BECAUSE I WAS TRYING TO USE 
+        # RUBY / RAILS METHOD seconds_since_midnight
+        # IN POSTGRESQL
+        # current_time = Time.current.seconds_since_midnight
+        # bookings.where(booking_date: Date.today)
+        #         .where(
+        #             "start_time.seconds_since_midnight <= ? AND 
+        #             end_time.seconds_since_midnight > ?", current_time, current_time)
+        #         .exists?
+
+
+
+        now = Time.current
         bookings.where(booking_date: Date.today)
-                .where("start_time <= ? AND end_time > ?", current_time, current_time)
+                .where("start_time::time <= ?::time AND end_time::time > ?::time", now, now)
                 .exists?
+
     end
 
     private 
