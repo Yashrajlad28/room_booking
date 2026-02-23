@@ -1,4 +1,14 @@
 class Api::V1::RoomsController < ApplicationController
+
+  def search
+    if params[:date].present? && params[:start].present? && params[:end].present?
+      @rooms = Room.available_between(params[:date], params[:start], params[:end])
+      render json: @rooms
+    else
+      render json: { error: "Please provide date, start_time, and end_time" }, status: :bad_request
+    end
+  end
+
   def index
     @rooms = Room.all
     # Map through rooms and add the 'is_available' key dynamically
