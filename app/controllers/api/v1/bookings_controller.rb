@@ -1,4 +1,4 @@
-class Api::V1::BookingsController < ApplicationController
+class Api::V1::BookingsController < ApiController
   # GET /api/v1/bookings
   def index
     # We use .includes to avoid "N+1" queries, making the API faster

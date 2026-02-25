@@ -14,6 +14,7 @@ class Booking < ApplicationRecord
         # This is not the best way since, this query will
         # run everytime new booking is created
         # A Rake task can be used here
+        # CRON
         Booking.where("booking_date < ?", Date.today - 7).delete_all
     end
 

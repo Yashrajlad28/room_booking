@@ -6,6 +6,7 @@ class User < ApplicationRecord
     before_validation :remove_extra_spaces
 
     # handles names like "Dr. Jacynthe Schimmel" 
+    # move regex to constants
     validates :name, presence: true, format: { with: /\A[A-Za-z\s.\-']+\z/ }
     validates :department, presence: true, format: { with: /\A[A-Za-z ]+\z/ }
 

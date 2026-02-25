@@ -8,6 +8,10 @@ Rails.application.routes.draw do
       end
       resources :bookings, only: [:index, :create, :destroy]
     end
+
+    namespace :v2 do
+      resources :bookings, only: [:index]
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

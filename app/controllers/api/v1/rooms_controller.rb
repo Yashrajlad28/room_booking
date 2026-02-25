@@ -1,4 +1,4 @@
-class Api::V1::RoomsController < ApplicationController
+class Api::V1::RoomsController < ApiController
 
   def search
     if params[:date].present? && params[:start].present? && params[:end].present?

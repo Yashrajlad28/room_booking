@@ -1,6 +1,6 @@
 class Room < ApplicationRecord
     has_many :bookings
-    has_many :users, through: :bookings
+    has_many :users, through: :bookings # eka time la ek user
 
     before_validation :remove_extra_spaces
 
@@ -39,7 +39,8 @@ class Room < ApplicationRecord
         #         .exists?
 
 
-
+        # Model war query nhi aali pahije
+        # he controller madhe lihi or services madhe
         now = Time.current
         bookings.where(booking_date: Date.today)
                 .where("start_time::time <= ?::time AND end_time::time > ?::time", now, now)
