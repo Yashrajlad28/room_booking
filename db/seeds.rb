@@ -6,44 +6,33 @@ Booking.destroy_all
 User.destroy_all
 Room.destroy_all
 
-# 2. CREATE USERS
-puts "Creating 10 random users..."
-10.times do
-  User.create!(
-    name: Faker::Name.name, 
-    department: Faker::Job.field
-  )
-end
-
-# 3. CREATE ROOMS
+# 2. CREATE ROOMS
 puts "Creating 5 random rooms..."
 5.times do
   Room.create!(
-    name: "#{Faker::Commerce.color.capitalize} Conference Room",
-    booked: [true, false].sample
+    name: "#{Faker::Commerce.color.capitalize} Conference Room"
   )
 end
 
-# 4. CREATE BOOKINGS (Now that Users and Rooms actually exist!)
-puts "Creating 15 random bookings..."
-user_ids = User.pluck(:id)
-room_ids = Room.pluck(:id)
+puts "Creating 6 unique users..."
 
-15.times do
-  start_hour = rand(8..17)
-  
-  # Use create (without !) inside the loop or stick with the rescue block
-  begin
-    Booking.create!(
-      user_id: user_ids.sample,
-      room_id: room_ids.sample,
-      booking_date: Faker::Date.between(from: Date.today, to: 1.month.from_now),
-      start_time: Time.zone.parse("#{start_hour}:00"),
-      end_time: Time.zone.parse("#{start_hour + 1}:00")
-    )
-  rescue ActiveRecord::RecordInvalid
-    puts "Skipping an overlapping booking..."
-  end
+users_data = [
+  { name: "Satej Patil", email: "satej@example.com", dept: "IT" },
+  { name: "Ananya Pandey",  email: "ananya@example.com", dept: "HR" },
+  { name: "Rohan Kumbhar",   email: "rohan@example.com", dept: "Operations" },
+  { name: "Sana Sonar",    email: "sana@example.com", dept: "Marketing" },
+  { name: "Vikram Vetal",  email: "vikram@example.com", dept: "Finance" },
+  { name: "Priya Aurora",   email: "priya@example.com", dept: "Design" }
+]
+
+users_data.each do |data|
+  User.create!(
+    name: data[:name],
+    email: data[:email],
+    password: "password123",
+    password_confirmation: "password123",
+    department: data[:dept]
+  )
 end
 
-puts "Done! Seeded #{User.count} users, #{Room.count} rooms, and #{Booking.count} bookings."
+puts "Successfully created #{User.count} users!"

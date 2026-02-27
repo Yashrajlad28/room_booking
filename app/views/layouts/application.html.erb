@@ -1,0 +1,36 @@
+<html>
+
+  <body>
+    <p class="notice"><%= notice %></p> 
+    <p class="alert"><%= alert %></p> 
+
+    <nav style="background: #f4f4f4; padding: 10px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <strong>RoomBooking</strong> | 
+        <%# <%= link_to "Rooms", api_v2_rooms_path %> | %>
+        <%= link_to "My Bookings", api_v2_bookings_path %>
+      </div>
+
+      <div>
+        <% if user_signed_in? %>
+          <span>Welcome, <strong><%= current_user.name %></strong>!</span>
+          <%= button_to "Log Out", destroy_user_session_path, method: :delete %>
+        <% else %>
+          <%= link_to "Login", new_user_session_path %>
+        <% end %>
+      </div>
+    </nav>
+
+    <div style="padding: 20px;">
+      <%# Display Flash Messages (Devise uses these for "Signed in successfully" etc.) %>
+      <% flash.each do |type, msg| %>
+        <div class="alert alert-<%= type %>" style="padding: 10px; margin-bottom: 20px; background: #e7f3fe; border: 1px solid #b6d4fe;">
+          <%= msg %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
+  </body>
+
+</html>
