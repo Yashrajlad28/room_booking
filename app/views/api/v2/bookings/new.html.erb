@@ -1,1 +1,30 @@
+<%= render "shared/errors", object: @booking %>
 <h1>Create New Booking</h1>
+
+
+<%= form_with model: @booking, url: api_v2_bookings_path do |f| %>
+  
+  <div>
+    <%= f.label :room_id %>
+    <%= f.number_field :room_id %>
+  </div>
+
+  <div>
+    <%= f.label :booking_date %>
+    <%= f.date_field :booking_date %>
+  </div>
+
+  <div>
+    <%= f.label :start_time %>
+    <%= f.time_field :start_time %>
+  </div>
+
+  <div>
+    <%= f.label :end_time %>
+    <%= f.time_field :end_time %>
+  </div>
+
+  <%= f.submit "Confirm Booking" %>
+<% end %>
+
+<%= link_to "Cancel", new_user_session_path %>

@@ -1,10 +1,9 @@
-<h1>Showing Bookings </h1>
+<h1> <%= current_user.name %>'s Bookings </h1>
 
 <table>
     <thead>
         <tr>
             <th>Sr No.</th>
-            <th>Person Name</th>
             <th>Room Name</th>
             <th>Date</th>
             <th>Start Time</th>
@@ -15,7 +14,6 @@
         <%@bookings.each_with_index do |booking, num|%>
             <tr>
                 <td> <%= num+1 %> </td>
-                <td> <%= booking.user.name %> </td>
                 <td> <%= booking.room.name %> </td>
                 <td> <%= booking.booking_date.strftime("%B %d, %Y") %> </td>
                 <td> <%= booking.start_time.strftime("%I:%M %p") %> </td>
