@@ -1,6 +1,7 @@
 class Booking < ApplicationRecord
-    belongs_to :user
-    belongs_to :room
+    # THIS IS JUST FOR VALIDATION
+    belongs_to :user, optional: true
+    belongs_to :room, optional: true
 
     validate :room_availability
     validate :booking_time_must_be_valid
@@ -43,7 +44,7 @@ class Booking < ApplicationRecord
         # 4. end_time cannot be less than start_time
         if end_time.strftime("%H:%M") < start_time.strftime("%H:%M")
             # END TIME IS COMING TWICE HERE
-            errors.add(:end_time, "end time cannot be before start time")
+            errors.add(:end_time, "cannot be before start time")
         end
         
     end

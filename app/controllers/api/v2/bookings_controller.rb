@@ -28,7 +28,8 @@ class Api::V2::BookingsController < ApplicationController
         if @booking.save
             redirect_to api_v2_bookings_path, notice: "Room successfully booked!"
         else
-            flash.now[:alert] = "Booking creation failed"
+            # flash.now[:alert] = @booking.errors.full_messages.to_sentence
+            flash.now[:alert] = @booking.errors.full_messages.join(", ")
             render :new, status: :unprocessable_entity
         end
     end
@@ -39,7 +40,7 @@ class Api::V2::BookingsController < ApplicationController
     def destroy
         @booking = Booking.find(params[:id])
         if @booking.destroy
-            flash.now[:alert] = "Booking successfully deleted"
+            flash[:notice] = "Booking successfully deleted"
         else 
             flash.now[:alert] = "Cannot be deleted"
         end

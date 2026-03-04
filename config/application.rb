@@ -19,6 +19,6 @@ module RoomBooking
 
     config.api_only = false
 
-    config.time_zone = 'Mumbai' # Time.current will return time as per this timezone
+    config.time_zone = 'Asia/Kolkata' # This is the correct Time Zone for IST
   end
 end
