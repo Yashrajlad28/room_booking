@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v2 do
-      resources :bookings, only: [:index, :new, :create]
+      resources :bookings, only: [:index, :new, :create, :show, :destroy]
     end
   end
 end

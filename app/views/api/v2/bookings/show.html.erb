@@ -1,0 +1,6 @@
+<h1>Showing the details of Booking</h1>
+
+
+<%= button_to "Delete", @booking, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
+<%= link_to "Edit", api_v2_bookings_path %>
+<%= link_to "Cancel", api_v2_bookings_path %>

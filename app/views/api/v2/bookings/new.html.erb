@@ -2,29 +2,50 @@
 <h1>Create New Booking</h1>
 
 
-<%= form_with model: @booking, url: api_v2_bookings_path do |f| %>
-  
-  <div>
-    <%= f.label :room_id %>
-    <%= f.number_field :room_id %>
-  </div>
+<%= form_with(url: new_api_v2_booking_path, method: :get) do |f| %>
 
   <div>
     <%= f.label :booking_date %>
-    <%= f.date_field :booking_date %>
+    <%= f.date_field :booking_date,
+    value: params[:booking_date] || Date.today,
+    required: true %>
   </div>
 
   <div>
     <%= f.label :start_time %>
-    <%= f.time_field :start_time %>
+    <%= f.time_field :start_time, 
+    value: params[:start_time] || Time.current.strftime("%H:%M"),
+    required: true %>
   </div>
 
   <div>
     <%= f.label :end_time %>
-    <%= f.time_field :end_time %>
+    <%= f.time_field :end_time,
+    value: params[:end_time], 
+    required: true %>
   </div>
 
-  <%= f.submit "Confirm Booking" %>
+  <%= f.submit "Search Rooms" %>
 <% end %>
 
-<%= link_to "Cancel", new_user_session_path %>
+<% if params[:end_time].present? %>
+  <% if @available_rooms.present? %>
+    <% @available_rooms.each do |room| %>
+      <p> <%= room.name %> </p>
+      <%= form_with scope: :booking, url: api_v2_bookings_path, local: true do |f| %>
+
+        <%= f.hidden_field :room_id, value: room.id %>
+        <%= f.hidden_field :booking_date, value: params[:booking_date] %>
+        <%= f.hidden_field :start_time, value: params[:start_time] %>
+        <%= f.hidden_field :end_time, value: params[:end_time] %>
+                
+        <%= f.submit "Book #{room.name}" %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <p> Sorry! No Rooms available. </p>
+  <% end %>
+<% end %>
+
+
+<%= link_to "Cancel", api_v2_bookings_path %>

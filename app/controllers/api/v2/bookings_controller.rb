@@ -10,6 +10,16 @@ class Api::V2::BookingsController < ApplicationController
 
     def new 
         @booking = Booking.new
+
+        if params[:booking_date].present? && params[:start_time].present? && params[:end_time].present?
+
+            @available_rooms = Room.available_between(
+                params[:booking_date], 
+                params[:start_time], 
+                params[:end_time]
+            )
+        end
+
     end
 
     def create
@@ -21,6 +31,19 @@ class Api::V2::BookingsController < ApplicationController
             flash.now[:alert] = "Booking creation failed"
             render :new, status: :unprocessable_entity
         end
+    end
+
+    def show
+    end
+
+    def destroy
+        @booking = Booking.find(params[:id])
+        if @booking.destroy
+            flash.now[:alert] = "Booking successfully deleted"
+        else 
+            flash.now[:alert] = "Cannot be deleted"
+        end
+        redirect_to api_v2_bookings_path
     end
 
     private 

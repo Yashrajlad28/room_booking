@@ -19,7 +19,7 @@ class Booking < ApplicationRecord
     end
 
     def booking_time_must_be_valid
-    # 1. Date cannot be in the past
+        # 1. Date cannot be in the past
         if booking_date < Date.today
             errors.add(:booking_date, "cannot be in the past")
             return
@@ -36,9 +36,16 @@ class Booking < ApplicationRecord
             # We use our 'now_on_dummy_date' trick again to compare times accurately
             now = Time.current
             if start_time.strftime("%H:%M") < now.strftime("%H:%M")
-            errors.add(:start_time, "cannot be in the past for today's bookings")
+                errors.add(:start_time, "cannot be in the past for today's bookings")
             end
         end
+
+        # 4. end_time cannot be less than start_time
+        if end_time.strftime("%H:%M") < start_time.strftime("%H:%M")
+            # END TIME IS COMING TWICE HERE
+            errors.add(:end_time, "end time cannot be before start time")
+        end
+        
     end
 
     def room_availability
