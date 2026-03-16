@@ -6,6 +6,7 @@ class User < ApplicationRecord
     has_many :bookings
     has_many :rooms, through: :bookings
 
+    enum :role, [:member, :admin]
 
     before_validation :remove_extra_spaces
 
@@ -13,7 +14,6 @@ class User < ApplicationRecord
     # move regex to constants
     validates :name, presence: true, format: { with: /\A[A-Za-z\s.\-']+\z/ }
     validates :department, presence: true, format: { with: /\A[A-Za-z ]+\z/ }
-
 
     private 
     

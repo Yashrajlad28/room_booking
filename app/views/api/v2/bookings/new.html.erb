@@ -21,18 +21,31 @@
 
           <div class="col-md-3">
             <%= f.label :start_time, class: "form-label" %>
-            <%= f.time_field :start_time,
-            value: params[:start_time] || Time.current.strftime("%H:%M"),
-            class: "form-control",
-            required: true %>
+            <div class="d-flex gap-1">
+              <%= f.time_select :start_time, 
+                  { 
+                    start_hour: 10,
+                    end_hour: 22,
+                    minute_step: 15, 
+                    ignore_date: true,
+                    ampm: true
+                  }, 
+                  { class: "form-select w-auto" } %>
+            </div>
           </div>
 
           <div class="col-md-3">
             <%= f.label :end_time, class: "form-label" %>
-            <%= f.time_field :end_time,
-            value: params[:end_time],
-            class: "form-control",
-            required: true %>
+            <%= f.time_select :end_time, 
+                  { 
+                    start_hour: 10,
+                    end_hour: 22,
+                    minute_step: 15,
+                    ignore_date: true,  
+                    ampm: true
+                  }, 
+                  { class: "form-select w-auto" } %>
+            </div>
           </div>
 
           <div class="col-md-2 d-flex align-items-end">
@@ -46,14 +59,11 @@
     </div>
   </div>
 
-  <% if params[:booking_date].present? && params[:start_time].present? && params[:end_time].present? %>
-    <% b = Booking.new(
-      booking_date:params[:booking_date],
-      start_time:params[:start_time],
-      end_time:params[:end_time]
-      ) 
-    %>
-    <% if b.valid? %>
+  <% 
+    if params[:booking_date].present?
+  %>
+    
+    <% if @temp_booking.valid? %>
 
       <div class="card shadow-sm">
         <div class="card-header">
@@ -90,8 +100,8 @@
 
                         <%= f.hidden_field :room_id, value: room.id %>
                         <%= f.hidden_field :booking_date, value: params[:booking_date] %>
-                        <%= f.hidden_field :start_time, value: params[:start_time] %>
-                        <%= f.hidden_field :end_time, value: params[:end_time] %>
+                        <%= f.hidden_field :start_time, value: @start_t %>
+                        <%= f.hidden_field :end_time, value: @end_t %>
 
                         <%= f.submit "Book",
                         class: "btn btn-sm btn-success" %>
@@ -119,7 +129,7 @@
       </div>
 
     <%else%>
-      <% flash.now[:alert] = b.errors.full_messages.join(", ") %>
+      <% flash.now[:alert] = @temp_booking.errors.full_messages.join(", ") %>
     <% end %>
   <% end %>
 

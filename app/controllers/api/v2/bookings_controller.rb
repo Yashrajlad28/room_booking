@@ -5,21 +5,33 @@ class Api::V2::BookingsController < ApplicationController
     def index
         # Only Admin can view this
         # @bookings = Booking.includes(:user, :room).all
-        @bookings = current_user.bookings
+        if current_user.role == "member"
+            @bookings = current_user.bookings
+        else
+            @bookings = Booking.includes(:user, :room)
+        end
     end
 
     def new 
         @booking = Booking.new
 
-        if params[:booking_date].present? && params[:start_time].present? && params[:end_time].present?
+        # Check if the multi-parameter keys are present
+        if params[:booking_date].present? && params[:"[start_time(4i)]"].present?
+            @start_t = Time.zone.parse("#{params[:booking_date]} #{params[:"[start_time(4i)]"]}:#{params[:"[start_time(5i)]"]}")
+            @end_t   = Time.zone.parse("#{params[:booking_date]} #{params[:"[end_time(4i)]"]}:#{params[:"[end_time(5i)]"]}")
 
             @available_rooms = Room.available_between(
                 params[:booking_date], 
-                params[:start_time], 
-                params[:end_time]
+                @start_t, 
+                @end_t
             )
+            
+            # initialize a dummy booking for validation checks in the view
+            @temp_booking = Booking.new(
+                booking_date: params[:booking_date], start_time: @start_t,
+                end_time: @end_t)
+        
         end
-
     end
 
     def create
@@ -50,7 +62,14 @@ class Api::V2::BookingsController < ApplicationController
     private 
 
     def booking_params
-        params.require(:booking).permit(:room_id, :booking_date, :start_time, :end_time)
+        params.require(:booking).permit(
+            :room_id,
+            :booking_date,
+            :start_time,
+            :end_time,
+            :"[start_time(4i)]", :"[start_time(5i)]",
+            :"[end_time(4i)]", :"[end_time(5i)]"
+        )
     end
 
 end
