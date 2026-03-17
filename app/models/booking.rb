@@ -3,6 +3,8 @@ class Booking < ApplicationRecord
     belongs_to :user, optional: true
     belongs_to :room, optional: true
 
+    enum :status, [:booked, :cancelled]
+
     validate :room_availability
     validate :booking_time_must_be_valid
 
@@ -14,7 +16,6 @@ class Booking < ApplicationRecord
     def cleanup_old_bookings
         # This is not the best way since, this query will
         # run everytime new booking is created
-        # A Rake task can be used here
         # CRON
         Booking.where("booking_date < ?", Date.today - 7).delete_all
     end
@@ -43,16 +44,17 @@ class Booking < ApplicationRecord
 
         # 4. end_time cannot be less than start_time
         if end_time.strftime("%H:%M") < start_time.strftime("%H:%M")
-            # END TIME IS COMING TWICE HERE
             errors.add(:end_time, "cannot be before start time")
         end
         
     end
 
     def room_availability
-        # We add '::time' to the placeholders to tell Postgres the exact data type
+        # add '::time' to tell Postgres the exact data type
+        # .where.not(id: id) BOOKING CHECKED AGAINST ITSELF, WHILE CANCELLING IT, 
+        # VALIDATION FAILED AND IT WAS NOT SAVED IN DATABASE
         overlapping_bookings = Booking.where(room_id: room_id, booking_date: booking_date)
-                                        .where.not(id: id)
+                                        .where.not(id: id) 
                                         .where("(start_time, end_time) OVERLAPS (?::time, ?::time)", start_time, end_time)
 
         if overlapping_bookings.exists?

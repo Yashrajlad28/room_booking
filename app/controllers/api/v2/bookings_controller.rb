@@ -5,7 +5,7 @@ class Api::V2::BookingsController < ApplicationController
     def index
         # Only Admin can view this
         # @bookings = Booking.includes(:user, :room).all
-        if current_user.role == "member"
+        if current_user.member?
             @bookings = current_user.bookings
         else
             @bookings = Booking.includes(:user, :room)
@@ -20,16 +20,11 @@ class Api::V2::BookingsController < ApplicationController
             @start_t = Time.zone.parse("#{params[:booking_date]} #{params[:"[start_time(4i)]"]}:#{params[:"[start_time(5i)]"]}")
             @end_t   = Time.zone.parse("#{params[:booking_date]} #{params[:"[end_time(4i)]"]}:#{params[:"[end_time(5i)]"]}")
 
-            @available_rooms = Room.available_between(
-                params[:booking_date], 
-                @start_t, 
-                @end_t
-            )
+            @booking.booking_date = params[:booking_date]
+            @booking.start_time = @start_t
+            @booking.end_time = @end_t
             
-            # initialize a dummy booking for validation checks in the view
-            @temp_booking = Booking.new(
-                booking_date: params[:booking_date], start_time: @start_t,
-                end_time: @end_t)
+            @available_rooms = Room.check_availability(params[:booking_date], @start_t, @end_t)
         
         end
     end
@@ -47,6 +42,7 @@ class Api::V2::BookingsController < ApplicationController
     end
 
     def show
+        @booking = Booking.find(params[:id])
     end
 
     def destroy
@@ -55,6 +51,16 @@ class Api::V2::BookingsController < ApplicationController
             flash[:notice] = "Booking successfully deleted"
         else 
             flash.now[:alert] = "Cannot be deleted"
+        end
+        redirect_to api_v2_bookings_path
+    end
+
+    def cancel
+        @booking = Booking.find(params[:id])
+        if @booking.cancelled!
+            flash[:notice] = "Booking Cancelled Successfully"
+        else
+            flash.now[:alert] = "Cannot be cancelled"
         end
         redirect_to api_v2_bookings_path
     end

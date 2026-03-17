@@ -1,12 +1,8 @@
-# db/seeds.rb
-
-# 1. CLEANUP
 puts "Cleaning database..."
 Booking.destroy_all
 User.destroy_all
 Room.destroy_all
 
-# 2. CREATE ROOMS
 puts "Creating 5 random rooms..."
 5.times do
   Room.create!(
