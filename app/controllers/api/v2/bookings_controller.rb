@@ -1,6 +1,7 @@
 class Api::V2::BookingsController < ApplicationController
 
     before_action :authenticate_user!
+    layout :determine_layout
 
     def index
         # Only Admin can view this
@@ -63,6 +64,10 @@ class Api::V2::BookingsController < ApplicationController
             flash.now[:alert] = "Cannot be cancelled"
         end
         redirect_to api_v2_bookings_path
+    end
+
+    def determine_layout
+        current_user.member? ? "application" : "admin"
     end
 
     private 

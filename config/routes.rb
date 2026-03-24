@@ -19,6 +19,9 @@ Rails.application.routes.draw do
           patch :cancel
         end
       end
+
+      resources :rooms, only: [:index, :show, :new, :destroy]
+
     end
   end
 end

@@ -43,8 +43,8 @@ class Booking < ApplicationRecord
         end
 
         # 4. end_time cannot be less than start_time
-        if end_time.strftime("%H:%M") < start_time.strftime("%H:%M")
-            errors.add(:end_time, "cannot be before start time")
+        if end_time.strftime("%H:%M") <= start_time.strftime("%H:%M")
+            errors.add(:end_time, "cannot be before or equal to start time")
         end
         
     end

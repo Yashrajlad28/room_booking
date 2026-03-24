@@ -128,7 +128,7 @@
       </div>
 
     <%else%>
-      <% flash.now[:alert] = @temp_booking.errors.full_messages.join(", ") %>
+      <% flash.now[:alert] = @booking.errors.full_messages.join(", ") %>
     <% end %>
   <% end %>
 

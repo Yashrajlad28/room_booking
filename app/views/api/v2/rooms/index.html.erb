@@ -1,0 +1,4 @@
+<h1>Index of Rooms<h1>
+<% if current_user.admin? %>
+    <%= link_to "New Room", new_api_v2_room_path %>
+<% end %>
