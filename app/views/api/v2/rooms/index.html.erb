@@ -1,0 +1,23 @@
+<h1>Index of Rooms</h1>
+
+<table>
+    <thead>
+        <th>Sr. No</th>
+        <th>Room Name</th>
+        <th>Action</th>
+    </thead>
+    <tbody>
+        <% @rooms.each_with_index do |room, num| %>
+            <tr>
+                <td> <%= num + 1 %> </td>
+                <td> <%= room.name %> </td>
+                <td> <%= link_to "Show", api_v2_room_path(room.id) %> </td>
+            </tr>
+        <% end %>
+    <tbody>
+</table>
+
+<% if current_user.admin? %>
+    <%= link_to "New Room", new_api_v2_room_path %>
+<% end %>
+

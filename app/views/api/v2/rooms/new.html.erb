@@ -1,0 +1,13 @@
+<h1>Create a new Room</h1>
+
+<%= form_with model: [:api, :v2, @room] do |f|%>
+    <div>
+        <%= f.label :name %>
+        <%= f.text_field :name %>
+    </div>
+    <div>
+        <%= f.submit %>
+    </div>
+<% end %>
+
+<%= link_to "Cancel", root_path %>
