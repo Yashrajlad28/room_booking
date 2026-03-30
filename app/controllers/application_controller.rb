@@ -3,11 +3,16 @@ class ApplicationController < ActionController::Base
 
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+    def after_sign_in_path_for(resource)
+        api_v2_bookings_path
+    end
+
     private
 
     def user_not_authorized
         flash[:alert] = 'You are not authorized to perform this action.'
-        redirect_to root_path
+        # render action_name, status: :forbidden
+        redirect_back_or_to(root_path)
     end
 
 end

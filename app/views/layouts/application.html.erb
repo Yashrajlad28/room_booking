@@ -18,7 +18,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
 
-        <%= link_to "RoomBooking", api_v2_bookings_path, class: "navbar-brand" %>
+        <% if user_signed_in? %>
+          <%= link_to "RoomBooking", api_v2_bookings_path, class: "navbar-brand" %>
+        <% else %>
+          <%= link_to "RoomBooking", root_path, class: "navbar-brand" %>
+        <% end %>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
@@ -27,13 +31,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
 
           <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <%= link_to "My Bookings", api_v2_bookings_path, class: "nav-link" %>
-            </li>
 
             <% if user_signed_in? %>
               <li class="nav-item">
                 <%= link_to "New Booking", new_api_v2_booking_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "My Bookings", api_v2_bookings_path, class: "nav-link" %>
               </li>
             <% end %>
           </ul>

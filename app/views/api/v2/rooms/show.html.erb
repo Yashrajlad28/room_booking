@@ -1,0 +1,13 @@
+<h1>Showing Room <%= @room.name %></h1>
+
+<% if current_user.admin? %>
+    <%= button_to "Delete", 
+        api_v2_room_path(@room), 
+        method: :delete, 
+        data: { turbo_confirm: "Are you sure? You want to delete" } %>
+
+    <%= link_to "Edit", edit_api_v2_room_path %>
+
+<% end %>
+
+<%= link_to "Back", api_v2_bookings_path %>

@@ -22,13 +22,14 @@
           <div class="col-md-3">
             <%= f.label :start_time, class: "form-label" %>
             <div class="d-flex gap-1">
-              <%= f.time_select :start_time, 
+              <%= f.time_select :start_time,
                   { 
                     start_hour: 10,
                     end_hour: 22,
                     minute_step: 15, 
                     ignore_date: true,
-                    ampm: true
+                    ampm: true,
+                    default: @start_t || Time.zone.now
                   }, 
                   { class: "form-select w-auto" } %>
             </div>
@@ -36,15 +37,17 @@
 
           <div class="col-md-3">
             <%= f.label :end_time, class: "form-label" %>
-            <%= f.time_select :end_time, 
-                  { 
-                    start_hour: 10,
-                    end_hour: 22,
-                    minute_step: 15,
-                    ignore_date: true,  
-                    ampm: true
-                  }, 
-                  { class: "form-select w-auto" } %>
+            <div class="d-flex gap-1">
+              <%= f.time_select :end_time,
+                    { 
+                      start_hour: 10,
+                      end_hour: 22,
+                      minute_step: 15,
+                      ignore_date: true,  
+                      ampm: true,
+                      default: @end_t || Time.zone.now
+                    }, 
+                    { class: "form-select w-auto" } %>
             </div>
           </div>
 

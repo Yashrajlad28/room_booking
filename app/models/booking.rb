@@ -10,6 +10,9 @@ class Booking < ApplicationRecord
 
     after_create :cleanup_old_bookings
 
+    # creates method for accessing @conflicting_time_slots
+    attr_accessor :conflicting_time_slots
+
   
     private
 
@@ -54,10 +57,15 @@ class Booking < ApplicationRecord
         # .where.not(id: id) BOOKING CHECKED AGAINST ITSELF, WHILE CANCELLING IT, 
         # VALIDATION FAILED AND IT WAS NOT SAVED IN DATABASE
         overlapping_bookings = Booking.where(room_id: room_id, booking_date: booking_date)
-                                        .where.not(id: id) 
+                                        .where.not(id: id)
+                                        .where(status: 0) 
                                         .where("(start_time, end_time) OVERLAPS (?::time, ?::time)", start_time, end_time)
 
         if overlapping_bookings.exists?
+            # activates the setter
+            self.conflicting_time_slots = overlapping_bookings.map do |b|
+                [b.start_time.strftime("%I:%M %p"), b.end_time.strftime("%I:%M %p")] 
+            end
             errors.add(:base, "Room is already booked for this time slot")
         end
     end

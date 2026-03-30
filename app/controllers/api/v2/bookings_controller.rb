@@ -1,6 +1,7 @@
 class Api::V2::BookingsController < ApplicationController
 
     before_action :authenticate_user!
+    before_action :set_booking, only: [:edit, :show, :destroy, :cancel, :update]
     layout :determine_layout
 
     def index
@@ -10,6 +11,23 @@ class Api::V2::BookingsController < ApplicationController
             @bookings = current_user.bookings
         else
             @bookings = Booking.includes(:user, :room)
+        end
+    end
+
+    def edit
+    end
+
+    def update
+        if @booking.update(booking_params)
+            redirect_to api_v2_bookings_path, notice: "Booking edited successfully"
+        else
+            if @booking.conflicting_time_slots.present?
+                flash.now[:alert] = "Conflicts with: #{@booking.conflicting_time_slots.join(', ')}"
+            else
+                flash.now[:alert] = @booking.errors.full_messages.join(", ")
+            end
+
+            render :edit, status: :unprocessable_entity
         end
     end
 
@@ -43,11 +61,9 @@ class Api::V2::BookingsController < ApplicationController
     end
 
     def show
-        @booking = Booking.find(params[:id])
     end
 
     def destroy
-        @booking = Booking.find(params[:id])
         if @booking.destroy
             flash[:notice] = "Booking successfully deleted"
         else 
@@ -57,7 +73,6 @@ class Api::V2::BookingsController < ApplicationController
     end
 
     def cancel
-        @booking = Booking.find(params[:id])
         if @booking.cancelled!
             flash[:notice] = "Booking Cancelled Successfully"
         else
@@ -81,6 +96,10 @@ class Api::V2::BookingsController < ApplicationController
             :"[start_time(4i)]", :"[start_time(5i)]",
             :"[end_time(4i)]", :"[end_time(5i)]"
         )
+    end
+
+    def set_booking
+        @booking = Booking.find(params[:id])
     end
 
 end

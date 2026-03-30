@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
+
   devise_for :users
 
-  root "api/v2/bookings#index"
+  root "welcome#index"
 
   namespace :api do
     namespace :v1 do
@@ -14,13 +15,13 @@ Rails.application.routes.draw do
     end
 
     namespace :v2 do
-      resources :bookings, only: [:index, :new, :create, :show, :destroy] do
+      resources :bookings do
         member do
           patch :cancel
         end
       end
 
-      resources :rooms, only: [:index, :show, :new, :destroy]
+      resources :rooms
 
     end
   end
